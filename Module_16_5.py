@@ -31,7 +31,9 @@ async def get_all_users(request: Request):
 @app.get('/user/{user_id}', response_class=HTMLResponse)
 async def get_users(request: Request, user_id: Annotated[int, Path(ge=1)]):
     try:
-        return templates.TemplateResponse('users.html', {'request': request, 'user': users[user_id]})
+        for user in users:
+            if user.id == user_id:
+                return templates.TemplateResponse('users.html', {'request': request, 'user': user})
     except IndexError:
         raise HTTPException(status_code=404, detail='User was not found')
 
